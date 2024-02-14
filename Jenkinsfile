@@ -47,5 +47,15 @@ pipeline {
                 }
             }
         }
+        stage('Deploy to K8s') {
+            steps {
+                script {
+                    withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'k8s-cred', namespace: 'webapps', restrictKubeConfigAccess: false, serverUrl: 'https://192.168.1.200:6443') {
+                    sh 'kubectl apply -f valentine-deploy.yaml'
+                    sh 'kubectl get svc -n webapps'
+                }
+               }
+            }
+        }
     }
 }
